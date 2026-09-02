@@ -1,0 +1,5 @@
+aivenv/
+__pycache__/
+.env
+data/raw/
+*.pyc
