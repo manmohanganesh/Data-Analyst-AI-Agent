@@ -1,5 +1,8 @@
 aivenv/
 __pycache__/
 .env
+
 data/raw/
+data/database/
+
 *.pyc
