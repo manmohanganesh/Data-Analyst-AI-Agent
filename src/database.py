@@ -38,10 +38,36 @@ class DatabaseManager:
             )
         return database_schema
 
+    def format_schema_for_llm(self):
+        database_schema=self.get_database_schema()
+        formatted_schema=""
+        for table_name,columns in database_schema.items():
+            formatted_schema+=f"\nTABLE: {table_name}\n"
+            for column in columns:
+                column_name=column["column_name"]
+                data_type = column['data_type']
+
+                formatted_schema +=(
+                    f"- {column_name} ({data_type})\n"
+                )
+        return formatted_schema
+
     def execute_query(self,query):
-        with self.engine.connect() as connection:
-            dataframe = pd.read_sql_query(
-                text(query),
-                connection
-            )
-        return dataframe
+        try:
+            with self.engine.connect() as connection:
+                dataframe = pd.read_sql_query(
+                    text(query),
+                    connection
+                    )
+            return {
+                'success' :True,
+                'data':dataframe,
+                'error' : None
+            }
+
+        except Exception as error:
+            return{
+                'success':False,
+                'data':None,
+                'error':str(error)
+            }

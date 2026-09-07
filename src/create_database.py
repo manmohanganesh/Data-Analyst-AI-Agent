@@ -8,7 +8,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 RAW_DATA_PATH = BASE_DIR/"data"/"raw"
 
 DATABASE_PATH = (BASE_DIR/"data"/"database"/"olist.db")
-print(DATABASE_PATH)
 DATASETS = {
     "customers": "olist_customers_dataset.csv",
     "orders": "olist_orders_dataset.csv",
@@ -26,10 +25,7 @@ def create_database():
         parents=True,
         exist_ok=True
     )
-    print(DATABASE_PATH)
-    engine = create_engine(
-        f"sqlite:///{DATABASE_PATH}"
-    )
+    engine = create_engine(f"sqlite:///{DATABASE_PATH}")
 
     for table_name,file_name in DATASETS.items():
         file_path = RAW_DATA_PATH / file_name
@@ -46,16 +42,12 @@ def create_database():
             index=False
         )
 
-        print(
-            f"Loaded {len(df):,}rows"
-        )
+        print(f"Loaded {len(df):,}rows")
 
     print("\n"+"="*50)
     print("DATABASE CREATED SUCCESSFULLY")
     print("="*50)
-    print(
-        f"\n Database location:\n{DATABASE_PATH}"
-    )
+    print(f"\n Database location:\n{DATABASE_PATH}")
 
 if __name__=="__main__":
     create_database()
