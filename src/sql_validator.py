@@ -1,5 +1,6 @@
 import re
 
+
 def validate_sql(query):
     query = query.strip()
 

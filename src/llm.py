@@ -95,3 +95,57 @@ class LLMManager:
             }
         )       
         return response.message.content.strip()
+    
+    def recommend_chart(self,user_question,dataframe_info):
+        prompt = f"""
+        You are an expert data visualization analyst.
+
+        Your task is to recommend the most appropriate chart
+        for the user's question based on the provided dataframe.
+
+        USER QUESTION:
+        {user_question}
+
+        DATAFRAME INFORMATION:
+        {dataframe_info}
+
+        RULES:
+
+        - Choose only one chart type.
+        - Allowed chart types are:
+          bar, line, scatter, pie
+        - Use the actual column names provided in the dataframe.
+        - Do not invent column names.
+        - Select columns that exist in the dataframe.
+        - For categorical comparisons, prefer bar charts.
+        - For trends over time, prefer line charts.
+        - For relationships between two numerical variables,
+          prefer scatter plots.
+        - Use pie charts only when showing meaningful
+          parts of a whole.
+        - Return only valid JSON.
+        - Do not use Markdown code blocks.
+        - Do not include explanations.
+
+        JSON FORMAT:
+
+        {{
+            "chart_type": "bar",
+            "x_column": "column_name",
+            "y_column": "column_name",
+            "title": "Chart title"
+        }}
+        """
+        response = chat(
+            model=self.model,
+            messages=[
+                {
+                    'role':'user',
+                    'content':prompt
+                }
+            ],
+            options={
+                'temperature':0
+            }
+        )
+        return response.message.content.strip()

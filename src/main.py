@@ -1,6 +1,12 @@
 from src.database import DatabaseManager
 from src.llm import LLMManager
 from src.sql_validator import validate_sql
+from src.visualization import (
+    generate_chart,
+    inspect_dataframe,
+    parse_chart_recommendation,
+    validate_chart_config,
+)
 
 
 def main():
@@ -90,8 +96,63 @@ def main():
 
         if result["success"]:
 
-            print("\nQUERY EXECUTED SUCCESSFULLY!\n")
-            print(result["data"])
+            dataframe = result["data"]
+
+            print("\nQuery successful!")
+            print(dataframe)
+
+            # Inspect dataframe
+            dataframe_info = inspect_dataframe(dataframe)
+
+            print("\nDataFrame information:")
+            print(dataframe_info)
+
+            # Ask LLM for chart recommendation
+            chart_recommendation = llm.recommend_chart(
+                user_question,
+                dataframe_info
+            )
+
+            print("\nChart recommendation:")
+            print(chart_recommendation)
+
+            # Parse LLM response
+            parsed_recommendation = parse_chart_recommendation(
+                chart_recommendation
+            )
+
+            if not parsed_recommendation["success"]:
+
+                print(
+                    "\nInvalid chart recommendation:"
+                )
+                print(parsed_recommendation["error"])
+
+                break
+
+            # Validate chart configuration
+            chart_validation = validate_chart_config(
+                parsed_recommendation["config"],
+                dataframe
+            )
+
+            if not chart_validation["valid"]:
+
+                print(
+                    "\nInvalid chart configuration:"
+                )
+                print(chart_validation["error"])
+
+                break
+
+            # Generate chart
+            chart_path = generate_chart(
+                dataframe,
+                parsed_recommendation["config"]
+            )
+
+            print("\nChart generated:")
+            print(chart_path)
 
             break
 
