@@ -1,18 +1,16 @@
 from typing import TypedDict
 
-from langgraph.graph import StateGraph, START, END
+from langgraph.graph import END, START, StateGraph
 
-from src.llm import LLMManager
 from src.database import DatabaseManager
+from src.llm import LLMManager
 from src.sql_validator import validate_sql
-
 from src.visualization import (
+    generate_chart,
     inspect_dataframe,
     parse_chart_recommendation,
     validate_chart_config,
-    generate_chart
 )
-
 
 # ============================================================
 # STATE

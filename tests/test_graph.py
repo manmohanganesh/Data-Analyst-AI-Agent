@@ -1,5 +1,5 @@
-from src.graph import graph
 from src.database import DatabaseManager
+from src.graph import graph
 
 
 def main():
